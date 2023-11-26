@@ -1,13 +1,16 @@
+
 import os
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-    
+
+# Reading in the file using a dynamic location
 dirName = os.path.dirname(__file__)
 absFileName = os.path.join(dirName, r'QueryWithDemographicsNoNullsAdditionalQuestions.xlsx')
 df = pd.read_excel(absFileName)
 
+# Data frame for column headers and the renaming to a relevant question description
 df.rename(
     columns={
         "q1": "age", "q2": "sex", "q3": "grade", "q6": "height", "q7": "weight", "q47": "marijuana", 
@@ -16,6 +19,7 @@ df.rename(
     inplace=True
 )
 
+# Data frames stored as variables
 age = df["age"]
 sex = df["sex"]
 grade = df["grade"]
@@ -33,7 +37,7 @@ def heatmap():
     plt.rcParams['figure.facecolor'] = 'xkcd:salmon'
     plt.figure(figsize=(12, 7),dpi=100)
     sns.heatmap(df_num.corr(),annot=True,vmin=0,vmax=1,cmap="viridis")
-    
+    plt.show()
 def piechart():
     labels1 = ["No Usage","Marijuana User"]
     labels2 = ["No Usage","Illegal Drugs User"]
@@ -105,9 +109,9 @@ def piechart():
     # show graph
     fig.tight_layout()
     plt.show()
-
 def barchart():
-    # bar chart
+    
+    # Counters of users of specific drugs and drug combinations
     counter_m = 0
     for users in marijuana:
         if users != 1:
@@ -153,10 +157,12 @@ def barchart():
             if marijuana[i] > 1 and ecstasy[i] > 1:
                 counter_mec += 1
     
+    # Counters for totals of specific drug usage
     counter_m_illegal = counter_mc + counter_mh + counter_mm + counter_mec
     counter_m_only = counter_m - counter_m_illegal
     counter_percent = str(round(counter_m_illegal / counter_m_only, 2)).replace('0.', '')
     
+    # Parameters for graphs to be uniform with one another in text size and background color
     plt.rcParams.update({'font.size': 8})
     plt.rcParams['figure.facecolor'] = 'xkcd:salmon'
     
@@ -191,6 +197,7 @@ def barchart():
     plt.ylabel('Number Of Users')
     plt.show()
     
+    # Additional Statistics to accompany graph printed to console for quick reference
     print(f'\n\nMarijuana Users: {counter_m}')
     print(f'Cocaine Users: {counter_c}')
     print(f'Heroin Users: {counter_h}')
@@ -207,6 +214,52 @@ def barchart():
     print('--------------------------------------------------------------------------------------')
     print(f'Percentage of users that use other illegal drugs along with marijuana: {counter_percent}%')
 
-heatmap()
-piechart()
-barchart()
+choice_list = ('heatmap', 'bar graph', 'pie chart', 'all')
+choice = ''
+
+print('\n\nWelcome to our program that explores the Youth Risk Behavior System\'s '
+      'data set. This program is designed to explore the correlation and tendencies '
+      'of youth who use Marijuana and other illegal drugs, as well as how they relate '
+      'to each other.')
+print('------------------------------------------------------------------------------------------')
+
+# Overarching while loop that does not break until user inputs they would no longer like to continue
+while True:
+    # Inner while loop to solicit input from the user as to which graph they would like to see
+    while True:
+        print('\nWhat graph would you like to see?')
+        choice = input('(Please enter Heatmap, Bar Graph, Pie Chart, All): ').lower()
+        print('------------------------------------------------------------------------------------------')
+        # Validation to ensure the choice selected is an option, and will notify the user if their choice is 
+        # not an option.
+        if choice not in choice_list:
+            print('\n------------------------------------------------------------------------------------------')
+            print(f'\'{choice}\' is not a valid option. Please try again and choose from the 4 options provided.')
+            print('------------------------------------------------------------------------------------------')
+        else:
+            break
+    
+    # Choices calling their relevant functions when selected
+    if choice == 'bar graph':
+        barchart()
+    elif choice == 'pie chart':
+        piechart() 
+    elif choice == 'heatmap':
+        heatmap()
+    elif choice == 'all':
+        heatmap()
+        piechart()
+        barchart()
+    
+    # Solicting the user whether to run the loop again to see another graph or stop the program.
+    print('Would you like to continue and see another graph?')
+    print('------------------------------------------------------------------------------------------')
+    cont = input('(Please enter Y/N): ').upper()
+    
+    # Stopping the program and thanking the user for using our program.
+    if cont == 'N':
+        print('------------------------------------------------------------------------------------------')
+        print('\n\n\n\n\n\n\n\n\n\n\n\n------------------------------------------------------------------------------------------')
+        print('Thank you for using our program and we hope you enjoyed the content!')
+        print('------------------------------------------------------------------------------------------')
+        break
