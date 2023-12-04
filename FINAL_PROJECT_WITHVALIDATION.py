@@ -1,7 +1,5 @@
-
 import os
 import pandas as pd
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -32,12 +30,11 @@ meth = df["meth"]
 ecstasy = df["ecstasy"]
 
 def heatmap():
-    df_num = df.drop(columns=["grade"])
-    plt.rcParams.update({'font.size': 8})
+    df_heat = df.drop(columns=["grade"])
+    plt.rcParams.update({'font.size': 18})
     plt.rcParams['figure.facecolor'] = 'xkcd:salmon'
     plt.figure(figsize=(12, 7),dpi=100)
-    sns.heatmap(df_num.corr(),annot=True,vmin=0,vmax=1,cmap="viridis")
-    plt.show()
+    sns.heatmap(df_heat.corr(),annot=True,vmin=0,vmax=1,cmap="viridis")  
 def piechart():
     labels1 = ["No Usage","Marijuana User"]
     labels2 = ["No Usage","Illegal Drugs User"]
@@ -78,7 +75,7 @@ def piechart():
     pielist4[0] = (pielist4[0]/pietotal4)*100
     pielist4[1] = (pielist4[1]/pietotal4)*100
     # size of subplot/figure area
-    fig = plt.figure(figsize=(18,10), dpi=100)
+    fig = plt.figure(figsize=(9,5), dpi=200)
     plt.rcParams.update({'font.size': 8})
     plt.rcParams['figure.facecolor'] = 'xkcd:salmon'
     #first row, first column
@@ -93,6 +90,12 @@ def piechart():
     plt.title("Usage of Illegal Drugs",fontsize=16)
     labels = [f"{labels2[0]} ({pielist2[0]:0.1f}%)",f"{labels2[1]} ({pielist2[1]:0.1f}%)"]
     ax2.legend(bbox_to_anchor=(0.85, 1), loc='upper left', labels=labels)
+    #second row second column
+    ax4 = plt.subplot2grid((2,2), (1, 1))
+    plt.pie(pielist4, explode=[0,0.2], startangle=90, colors=["green","yellow"])
+    plt.title("Marijuana VS Illegal Drugs",fontsize=16)
+    labels = [f"{labels4[0]} ({pielist4[0]:0.1f}%)",f"{labels4[1]} ({pielist4[1]:0.1f}%)"]
+    ax4.legend(bbox_to_anchor=(0.85, 1), loc='upper left', labels=labels)
     #Second row first column
     ax3 = plt.subplot2grid((2,2), (1, 0))
     plt.pie(pielist3, explode=[0.2,0,0,0], startangle=90, colors=["lightblue","green","red","yellow"])
@@ -100,18 +103,12 @@ def piechart():
     labels = [f"{labels3[0]} ({pielist3[0]:0.1f}%)",f"{labels3[1]} ({pielist3[1]:0.1f}%)",
               f"{labels3[2]} ({pielist3[2]:0.1f}%)",f"{labels3[3]} ({pielist3[3]:0.1f}%)"]
     ax3.legend(bbox_to_anchor=(0.85, 1), loc='upper left', labels=labels)
-    #second row second column
-    ax4 = plt.subplot2grid((2,2), (1, 1))
-    plt.pie(pielist4, explode=[0,0.2], startangle=90, colors=["green","yellow"])
-    plt.title("Marijuana VS Illegal Drugs",fontsize=16)
-    labels = [f"{labels4[0]} ({pielist4[0]:0.1f}%)",f"{labels4[1]} ({pielist4[1]:0.1f}%)"]
-    ax4.legend(bbox_to_anchor=(0.85, 1), loc='upper left', labels=labels)
+    
     # show graph
     fig.tight_layout()
     plt.show()
 def barchart():
-    
-    # Counters of users of specific drugs and drug combinations
+    # bar chart
     counter_m = 0
     for users in marijuana:
         if users != 1:
@@ -157,13 +154,11 @@ def barchart():
             if marijuana[i] > 1 and ecstasy[i] > 1:
                 counter_mec += 1
     
-    # Counters for totals of specific drug usage
     counter_m_illegal = counter_mc + counter_mh + counter_mm + counter_mec
     counter_m_only = counter_m - counter_m_illegal
     counter_percent = str(round(counter_m_illegal / counter_m_only, 2)).replace('0.', '')
     
-    # Parameters for graphs to be uniform with one another in text size and background color
-    plt.rcParams.update({'font.size': 8})
+    plt.rcParams.update({'font.size': 14})
     plt.rcParams['figure.facecolor'] = 'xkcd:salmon'
     
     # Drug use graph
@@ -197,7 +192,6 @@ def barchart():
     plt.ylabel('Number Of Users')
     plt.show()
     
-    # Additional Statistics to accompany graph printed to console for quick reference
     print(f'\n\nMarijuana Users: {counter_m}')
     print(f'Cocaine Users: {counter_c}')
     print(f'Heroin Users: {counter_h}')
@@ -254,12 +248,22 @@ while True:
     # Solicting the user whether to run the loop again to see another graph or stop the program.
     print('Would you like to continue and see another graph?')
     print('------------------------------------------------------------------------------------------')
-    cont = input('(Please enter Y/N): ').upper()
     
+    cont_options = ['Y', 'N']
+    while True:
+        cont = input('(Please enter Y/N): ').upper()
+        if cont not in cont_options:
+            print(f'\n\'{cont}\' is not a valid option. Please try again and select a valid option (Y/N).')
+        else:
+            break
     # Stopping the program and thanking the user for using our program.
     if cont == 'N':
         print('------------------------------------------------------------------------------------------')
         print('\n\n\n\n\n\n\n\n\n\n\n\n------------------------------------------------------------------------------------------')
+        print('Thank you for using our program and we hope you enjoyed the content!')
+        print('------------------------------------------------------------------------------------------')
+        break
+
         print('Thank you for using our program and we hope you enjoyed the content!')
         print('------------------------------------------------------------------------------------------')
         break
