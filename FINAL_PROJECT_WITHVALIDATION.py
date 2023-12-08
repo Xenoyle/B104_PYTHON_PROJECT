@@ -335,7 +335,7 @@ while True:
         # not an option.
         if choice not in choice_list:
             print('\n------------------------------------------------------------------------------------------')
-            print(f'\'{choice}\' is not a valid option. Please try again and choose from the 5 options provided.')
+            print(f'\'{choice}\' is not a valid option. Please try again and choose from the 6 options provided.')
             print('------------------------------------------------------------------------------------------')
         else:
             break
